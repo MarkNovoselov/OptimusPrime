@@ -1,11 +1,29 @@
 import telebot
 from fastapi import FastAPI, Request
+from contextlib import asynccontextmanager
 
 TOKEN = '8792672663:AAHv4ORGXc_wlSAPg6XqStqRUNsDvMYPmZI'
 WEBHOOK_URL = "https://optimusprime-48zy.onrender.com/webhook"
 
+
 bot = telebot.TeleBot(TOKEN)
-app = FastAPI()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # startup
+    bot.remove_webhook()
+    bot.set_webhook(url=WEBHOOK_URL)
+    print("Webhook set")
+
+    yield
+
+    # shutdown (если нужно)
+    bot.remove_webhook()
+    print("Webhook removed")
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @bot.message_handler(commands=['start'])
@@ -19,9 +37,3 @@ async def webhook(request: Request):
     update = telebot.types.Update.de_json(data)
     bot.process_new_updates([update])
     return {"ok": True}
-
-
-@app.on_event("startup")
-async def on_startup():
-    bot.remove_webhook()
-    bot.set_webhook(url=WEBHOOK_URL)
