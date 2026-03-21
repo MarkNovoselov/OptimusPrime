@@ -10,26 +10,6 @@ WEBHOOK_URL = "https://optimusprime-48zy.onrender.com/webhook"
 bot = telebot.TeleBot(TOKEN)
 
 
-@bot.message_handler(commands=['menu'])
-def menu(message):
-    markup = types.InlineKeyboardMarkup()
-
-    btn1 = types.InlineKeyboardButton("Кнопка 1", callback_data="btn1")
-    btn2 = types.InlineKeyboardButton("Кнопка 2", callback_data="btn2")
-
-    markup.add(btn1, btn2)
-
-    bot.send_message(message.chat.id, "Выбери:", reply_markup=markup)
-
-
-@bot.callback_query_handler(func=lambda call: True)
-def callback(call):
-    if call.data == "btn1":
-        bot.answer_callback_query(call.id, "Ты нажал кнопку 1")
-    elif call.data == "btn2":
-        bot.send_message(call.message.chat.id, "Кнопка 2 нажата")
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # startup
