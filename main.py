@@ -40,7 +40,20 @@ def start_message(message):
 def callback(call):
     if call.data == "btn1":
         bot.send_message(call.message.chat.id, '''Словарь матов по корням:
-        Словарь пока пуст...''')
+        -ху- (хуй)
+        -хер-
+        -хрен-
+        -фиг-
+        -еб-
+        -пизд-
+        -жоп-
+        -говн-
+        -ёпт-
+        -бля-
+        -перд-
+        -ср- (срать)
+        -муд-
+        другие''')
 
 
 @app.post("/webhook")
