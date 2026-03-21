@@ -21,7 +21,6 @@ async def lifespan(app: FastAPI):
 
     # shutdown (если нужно)
     bot.remove_webhook()
-    print("Webhook removed")
 
 
 app = FastAPI(lifespan=lifespan)
@@ -29,7 +28,19 @@ app = FastAPI(lifespan=lifespan)
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, "Hi from webhook 👋")
+    markup = types.InlineKeyboardMarkup()
+
+    btn1 = types.InlineKeyboardButton("Словарь Матов", callback_data="btn1")
+
+    markup.add(btn1)
+    
+    bot.send_message(message.chat.id, "Привет я Матный гномик, чем займемся?", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback(call):
+    if call.data == "btn1":
+        bot.send_message(call.message.chat.id, '''Словарь матов по корням:
+        Словарь пока пуст...''')
 
 
 @app.post("/webhook")
